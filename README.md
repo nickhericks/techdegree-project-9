@@ -1,3 +1,35 @@
+<!-- ## Overview of the Provided Project Files
+We've supplied the following files for you to use: 
+
+* The `seed` folder contains a starting set of data for your database in the form of a JSON file (`data.json`) and a collection of files (`context.js`, `database.js`, and `index.js`) that can be used to create your app's database and populate it with data (we'll explain how to do that below).
+* We've included a `.gitignore` file to ensure that the `node_modules` folder doesn't get pushed to your GitHub repo.
+* The `app.js` file configures Express to serve a simple REST API. We've also configured the `morgan` npm package to log HTTP requests/responses to the console. You'll update this file with the routes for the API. You'll update this file with the routes for the API.
+* The `nodemon.js` file configures the nodemon Node.js module, which we are using to run your REST API.
+* The `package.json` file (and the associated `package-lock.json` file) contain the project's npm configuration, which includes the project's dependencies.
+* The `RESTAPI.postman_collection.json` file is a collection of Postman requests that you can use to test and explore your REST API.
+
+## Getting Started
+To get up and running with this project, run the following commands from the root of the folder that contains this README file.
+
+First, install the project's dependencies using `npm`.
+```
+npm install
+```
+
+Second, seed the SQLite database.
+```
+npm run seed
+```
+And lastly, start the application.
+```
+npm start
+```
+
+To test the Express server, browse to the URL [http://localhost:5000/](http://localhost:5000/). -->
+
+
+
+
 # Project 9 - Full Stack JavaScript Techdegree
 
 ### REST API
@@ -20,19 +52,26 @@ A REST API that lets users create, list, update and delete items from a school d
 ## Project objective
 In this project, I used the popular Express web application framework and a SQL database to create a REST API that lets users create, list, update, and delete items from a school database.
 
+<!-- In this project, you’ll create a REST API using Express. The API will provide a way for users to administer a school database containing information about courses: users can interact with the database by retrieving a list of courses, as well as adding, updating and deleting courses in the database. -->
 
+<!-- In addition, the project will require users to create an account and log-in to make changes to the database. -->
+
+<!-- In a future project, you'll complete your full stack JavaScript application by using React to create a client for your REST API. -->
+
+<!-- To complete this project, you’ll use your knowledge of REST API design, Node.js, and Express to create API routes, along with the Sequelize ORM for data modeling, validation, and persistence. To test your application, you'll use Postman, a popular application for exploring and testing REST APIs. -->
+
+<!-- old -->
 <!-- In this project, I was given HTML designs and an existing SQLite database. I was required to implement a dynamic website using JavaScript, Node.js, Express, Pug, and the SQL ORM Sequelize. The application includes pages to list, add, update, and delete books from an SQLite database.
 
 I used Sequelize to access the data in the library.db SQLite database file. Express.js routes were created to handle the needed url requests, with corresponding Pug template files. Sequelize methods are used to create, read, update and delete data from the SQLite database. Sequelize model validation is used for validating form fields. -->
 
 
-<!-- ## Techniques and tools
-- Sequelize
-- SQLite database
+## Techniques and tools
+- REST API design
 - Node.js
 - Express.js
-- Pug template engine
-- npm -->
+- Sequelize ORM (data modeling, validation, persistence)
+- Postman (REST API testing)
 
 <!-- ## Code example
 Using the Book object to access the Sequelize book.js model, along with the Sequelize `.findByPk()` method to retrieve the book data we're looking for.
