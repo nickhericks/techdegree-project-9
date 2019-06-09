@@ -88,4 +88,4 @@ router.get('/:id', (req, res) => {
 ## Acknowledgements
 This project was built as part of the [Full Stack JavaScript Techdegree](https://join.teamtreehouse.com/techdegree/) offered by [Treehouse](https://teamtreehouse.com) :raised_hands:
 
-Also, a big thank you to the creators and maintainers of [Node.js](https://nodejs.org/en/), [Express](https://expressjs.com/), and [Pug](https://www.npmjs.com/package/pug). 👍
+Also, a big thank you to the creators and maintainers of [Node.js](https://nodejs.org/en/) and [Express](https://expressjs.com/). 👍
