@@ -17,11 +17,9 @@ app.use(morgan('dev'));
 
 
 // TODO setup your api routes here
-const routes = require('./routes');
 const userRoutes = require('./routes/users');
 const courseRoutes = require('./routes/courses');
 
-app.use('/api', routes);
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
 
