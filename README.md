@@ -1,7 +1,7 @@
 <!-- ## Overview of the Provided Project Files
 
 * The `seed` folder contains a starting set of data for your database in the form of a JSON file (`data.json`) and a collection of files (`context.js`, `database.js`, and `index.js`) that can be used to create your app's database and populate it with data (we'll explain how to do that below).
-* The `app.js` file configures Express to serve a simple REST API. We've also configured the `morgan` npm package to log HTTP requests/responses to the console. You'll update this file with the routes for the API. You'll update this file with the routes for the API.
+* The `app.js` file configures Express to serve a simple REST API. We've also configured the `morgan` npm package to log HTTP requests/responses to the console. You'll update this file with the routes for the API.
 * The `RESTAPI.postman_collection.json` file is a collection of Postman requests that you can use to test and explore your REST API.
 
 First, install the project's dependencies using `npm`.
