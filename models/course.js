@@ -31,15 +31,10 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		{}
 	);
-	Course.associate = function(models) {
+	Course.associate = (models) => {
 		// associations can be defined here
-
-
-
-
-
-
-
+		Course.belongsTo(models.User);
 	};
+	
 	return Course;
 };
