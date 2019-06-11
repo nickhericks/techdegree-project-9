@@ -52,7 +52,12 @@ router.post('/', [
 
 	// Add the user to the `users` array.
 	// users.push(user);
-	User.create();
+	User.create({
+		firstName: user.firstName,
+		lastName: user.lastName,
+		emailAddress: user.emailAddress,
+		password: user.password
+	});
 
 	// Set the status to 201 Created and end the response.
 	res.status(201).end();
