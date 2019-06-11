@@ -20,7 +20,7 @@ function asyncHandler(cb) {
 // GET /api/courses 200
 // Returns a list of courses (including the user that owns each course)
 router.get('/', asyncHandler( async (req, res) => {
-
+	// throw new Error('Oh noooooooo!');
 	const courses = await Course.findAll({
 		attributes: [
 			"id",
@@ -40,18 +40,15 @@ router.get('/', asyncHandler( async (req, res) => {
 			}
 		]
 	});
-
 	res.json({ courses });
 }));
-
 
 
 // GET /api/courses/:id 200
 // Returns a course (including the user that owns the course) for the provided course ID
 router.get('/:id', asyncHandler( async (req, res) => {
-
+	// throw new Error('Oh noooooooo!');
 	const courseId = req.params.id;
-
 	const course = await Course.findOne({
 		where: {
 			id: courseId
@@ -64,7 +61,6 @@ router.get('/:id', asyncHandler( async (req, res) => {
 			}
 		]
 	});
-
 	res.json({ course });
 }));
 
