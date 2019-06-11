@@ -78,15 +78,15 @@ router.get('/:id', asyncHandler( async (req, res) => {
 // Updates a course and returns no content
 router.post('/', asyncHandler( async (req, res) => {
 	// throw new Error('Oh noooooooo!');
-	if(req.body.author && req.body.quote) {
-		const quote = await records.createQuote({
-			quote: req.body.quote,
-			author: req.body.author
-		});
-		res.status(201).json(quote);
-	} else {
-		res.status(400).json({message: 'Quote and author required.'});
-	}  
+	// if(req.body.title && req.body.description) {
+	// 	const quote = await records.createQuote({
+	// 		title: req.body.title,
+	// 		description: req.body.description
+	// 	});
+	// 	res.status(201).json(quote);
+	// } else {
+	// 	res.status(400).json({message: 'Quote and author required.'});
+	// }  
 }));
 
 
