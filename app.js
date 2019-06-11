@@ -16,6 +16,10 @@ const app = express();
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
 
+// Middleware that tells express incoming data should be read as json
+// and also that it should be made available in the req.body
+app.use(express.json());
+
 
 
 // routes

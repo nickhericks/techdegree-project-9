@@ -1,15 +1,52 @@
 const express = require('express');
 const Course = require('../models').Course;
+const User = require('../models').User;
 
 const router = express.Router();
 
 
 
+// Helper function so that we don't need to add try/catch to every route
+function asyncHandler(cb) {
+  return async (req, res, next) => {
+    try {
+      await cb(req, res, next);
+    } catch (err) {
+      next(err);
+    }
+  };
+}
+
+
+
+
+
 // GET /api/courses 200
 // Returns a list of courses (including the user that owns each course)
-router.get('/', (req, res) => {
-	res.json({ greeting: 'courses route' });
-});
+router.get('/', asyncHandler( async (req, res) => {
+
+	const courses = await Course.findAll({
+		attributes: [
+			"id",
+			"title",
+			"description",
+			"userId"
+		],
+		include: [
+			{
+				model: User,
+				attributes: [
+					"id",
+					"firstName",
+					"lastName",
+					"emailAddress",
+				]
+			}
+		]
+	});
+
+	res.json({ courses });
+}));
 
 
 
