@@ -61,7 +61,11 @@ router.get('/:id', asyncHandler( async (req, res) => {
 			}
 		]
 	});
-	res.json({ course });
+	if (course) {
+		res.json({ course });
+	} else {
+		res.status(404).json({ message: 'Course id not found.' });
+	}
 }));
 
 
@@ -72,7 +76,18 @@ router.get('/:id', asyncHandler( async (req, res) => {
 
 // PUT /api/courses/:id 204
 // Updates a course and returns no content
-
+router.post('/', asyncHandler( async (req, res) => {
+	// throw new Error('Oh noooooooo!');
+	if(req.body.author && req.body.quote) {
+		const quote = await records.createQuote({
+			quote: req.body.quote,
+			author: req.body.author
+		});
+		res.status(201).json(quote);
+	} else {
+		res.status(400).json({message: 'Quote and author required.'});
+	}  
+}));
 
 
 // DELETE /api/courses/:id 204
