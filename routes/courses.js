@@ -5,7 +5,6 @@ const User = require('../models').User;
 const router = express.Router();
 
 
-
 // Helper function so that we don't need to add try/catch to every route
 function asyncHandler(cb) {
   return async (req, res, next) => {
@@ -16,9 +15,6 @@ function asyncHandler(cb) {
     }
   };
 }
-
-
-
 
 
 // GET /api/courses 200
@@ -51,8 +47,26 @@ router.get('/', asyncHandler( async (req, res) => {
 
 
 // GET /api/courses/:id 200
-// Returns a the course (including the user that owns the course) for the provided course ID
+// Returns a course (including the user that owns the course) for the provided course ID
+router.get('/:id', asyncHandler( async (req, res) => {
 
+	const courseId = req.params.id;
+
+	const course = await Course.findOne({
+		where: {
+			id: courseId
+		},
+		attributes: ["id", "title", "description", "userId"],
+		include: [
+			{
+				model: User,
+				attributes: ["id", "firstName", "lastName", "emailAddress"]
+			}
+		]
+	});
+
+	res.json({ course });
+}));
 
 
 // POST /api/courses 201
