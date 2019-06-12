@@ -64,16 +64,13 @@ const authenticateUser = async (req, res, next) => {
 
 
 
-
 // GET /api/users 200
 // return the currently authenticated user
 router.get("/", authenticateUser, (req, res) => {
   const user = req.currentUser;
-
-  res.json({ user });
+  const { firstName, lastName, emailAddress } = req.currentUser;
+  res.json({ firstName, lastName, emailAddress });
 });
-
-
 
 
 
