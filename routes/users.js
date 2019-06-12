@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 const express = require('express');
 const User = require('../models').User;
 const { check, validationResult } = require('express-validator/check');
@@ -22,7 +23,7 @@ router.post('/', [
 	check('lastName')
 		.exists({ checkNull: true, checkFalsy: true })
 		.withMessage('Please provide a value for "last name"'),
-	check('email')
+	check('emailAddress')
 		.exists({ checkNull: true, checkFalsy: true })
 		.withMessage('Please provide a value for "email"')
 		.isEmail()
@@ -46,25 +47,32 @@ router.post('/', [
 	}
 	// Get the user from the request body.
 	const user = req.body;
+	
+	// const existingEmail = user.emailAddress;
 
-	// Hash the new user's password.
-	user.password = bcryptjs.hashSync(user.password);
+	// User.findOne({ where: { emailAddress: user.emailAddress }}, (err, existingUser) => {
+  //   if (err) return next(err);
+  //   if (!existingUser) {
 
-	// Add the user to the `users` array.
-	// users.push(user);
-	User.create({
-		firstName: user.firstName,
-		lastName: user.lastName,
-		emailAddress: user.emailAddress,
-		password: user.password
-	});
+			      // Hash the new user's password.
+      user.password = bcryptjs.hashSync(user.password);
 
-	// Set the status to 201 Created and end the response.
-	res.status(201).end();
-}
-);
+      // Create user
+      User.create({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        emailAddress: user.emailAddress,
+        password: user.password
+      });
 
+      // Set the status to 201 Created and end the response.
+      res.status(201).end();
+    // } else {
+    //   res.status(400).json({ message: "Email address already exists" });
+    // }
+  // });
 
+});
 
 
 
