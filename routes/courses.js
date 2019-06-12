@@ -199,17 +199,24 @@ router.put('/:id', [
 			});
 
 			if (course) {
-				const updatedCourse = await Course.update({
-					title: req.body.title,
-					description: req.body.description
-				}, {
-					where: {
-						id: course.id
-					}
-				});
+				if (course.userId == req.currentUser.id) {
+					const updatedCourse = await Course.update({
+						title: req.body.title,
+						description: req.body.description
+					}, {
+						where: {
+							id: course.id
+						}
+					});
 
-				if (updatedCourse) {
-					res.status(204).end();
+					if (updatedCourse) {
+						res.status(204).end();
+					}
+
+				} else {
+					// Return a response with a 401 Unauthorized HTTP status code.
+        	res.status(401).json({ message: "Access denied" });
+
 				}
 			} else {
 				res.status(404).json({ message: "Course not found." });
