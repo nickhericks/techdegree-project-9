@@ -21,14 +21,9 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 
-
 // routes
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
-
-
-
-
 
 
 // setup a friendly greeting for the root route
@@ -58,8 +53,6 @@ app.use((err, req, res, next) => {
 });
 
 
-
-
 // set our port
 app.set('port', process.env.PORT || 5000);
 
@@ -78,5 +71,3 @@ sequelize
 			);
 		});
 	});
-
-
