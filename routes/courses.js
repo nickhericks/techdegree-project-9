@@ -32,7 +32,11 @@ const authenticateUser = asyncHandler( async (req, res, next) => {
   // by their username (i.e. the user's "key"
   // from the Authorization header).
   if (credentials) {
-    const user = await User.findOne({ emailAddress: credentials.name });
+    const user = await User.findOne({
+      where: {
+        emailAddress: credentials.name
+      }
+    });
 
     // If a user was successfully retrieved from the data store...
     // Use the bcryptjs npm package to compare the user's password
@@ -163,41 +167,56 @@ authenticateUser, asyncHandler( async (req, res) => {
 
 // PUT /api/courses/:id 204
 // Updates a course and returns no content
-router.put('/courses/:id', asyncHandler( async (req, res) => {
-	// throw new Error('Oh noooooooo!');
-	const quote = await records.getQuote(req.params.id);
-	if(quote) {
-		quote.quote = req.body.quote;
-		quote.author = req.body.author;
-		await records.updateQuote(quote);
+router.put('/:id', [
+	check('title')
+		.exists({ checkNull: true, checkFalsy: true })
+		.withMessage('Please provide a value for "title"'),
+	check('description')
+		.exists({ checkNull: true, checkFalsy: true })
+		.withMessage('Please provide a value for "description"'),
+	],
+	authenticateUser,  asyncHandler( async (req, res) => {
+		// Attempt to get the validation result from the Request object.
+		const errors = validationResult(req);
 
-		res.status(204).end();
-	} else {
-		res.status(404).json({ message: "Quote not found." });
-	}
-}));
+		// If there are validation errors...
+		if (!errors.isEmpty()) {
+			// Use the Array `map()` method to get a list of error messages.
+			const errorMessages = errors.array().map(error => error.msg);
+			// Return the validation errors to the client.
+			return res.status(400).json({ errors: errorMessages });
+		} else {
 
+			// find existing course
+			const course = await Course.findByPk(req.params.id, {
+				attributes: ["id", "title", "description", "userId"],
+				include: [
+					{
+						model: User,
+						attributes: ["id", "firstName", "lastName", "emailAddress"]
+					}
+				]
+			});
 
+			if (course) {
+				const updatedCourse = await Course.update({
+					title: req.body.title,
+					description: req.body.description
+				}, {
+					where: {
+						id: course.id
+					}
+				});
 
-router.get('/courses/:id', authenticateUser, asyncHandler( async (req, res) => {
-	// throw new Error('Oh noooooooo!');
-	const course = await Course.findByPk(req.params.id, {
-		attributes: ["id", "title", "description", "userId"],
-		include: [
-			{
-				model: User,
-				attributes: ["id", "firstName", "lastName", "emailAddress"]
+				if (updatedCourse) {
+					res.status(204).end();
+				}
+			} else {
+				res.status(404).json({ message: "Course not found." });
 			}
-		]
-	});
-	if (course) {
-		res.json({ course });
-	} else {
-		res.status(404).json({ message: 'Course id not found.' });
+		}
 	}
-}));
-
-
+));
 
 
 
@@ -213,6 +232,48 @@ router.delete("/courses/:id", asyncHandler( async (req, res, next) => {
 	// 	res.status(404).json({ message: "Quote not found." });
 	// }
 }));
+
+
+router.delete(
+  "/:id", authenticateUser, asyncHandler(async (req, res) => {
+
+
+
+      // find existing course
+      const course = await Course.findByPk(req.params.id, {
+        attributes: ["id", "title", "description", "userId"],
+        include: [
+          {
+            model: User,
+            attributes: ["id", "firstName", "lastName", "emailAddress"]
+          }
+        ]
+      });
+
+      if (course) {
+				if (course.userId == req.currentUser.id) {
+					const deletedCourse = await Course.destroy(
+						{
+							where: {
+								id: course.id
+							}
+						}
+					);
+
+					if (deletedCourse) {
+						res.status(204).end();
+					}
+				
+				} else {
+					// Return a response with a 401 Unauthorized HTTP status code.
+        	res.status(401).json({ message: "Access denied" });
+
+				}
+      } else {
+        res.status(404).json({ message: "Course not found." });
+      }
+  })
+);
 
 
 
