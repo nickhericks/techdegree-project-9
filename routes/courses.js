@@ -208,9 +208,8 @@ router.put('/:id', [
 					}
 
 				} else {
-					// Return a response with a 401 Unauthorized HTTP status code.
-        	res.status(401).json({ message: "Access denied" });
-
+					// Return a response with a 403 Client forbidden HTTP status code.
+        	res.status(403).json({ message: "Access not permitted" });
 				}
 			} else {
 				res.status(404).json({ message: "Course not found." });
@@ -251,9 +250,8 @@ router.delete(
 					}
 				
 				} else {
-					// Return a response with a 401 Unauthorized HTTP status code.
-        	res.status(401).json({ message: "Access denied" });
-
+					// Return a response with a 403 Client forbidden HTTP status code.
+        	res.status(403).json({ message: "Access not permitted" });
 				}
       } else {
         res.status(404).json({ message: "Course not found." });
