@@ -1,6 +1,10 @@
 const express = require('express');
 const Course = require('../models').Course;
 const User = require('../models').User;
+const { check, validationResult } = require("express-validator/check");
+// const { authenticateUser } = require("./users");
+const bcryptjs = require("bcryptjs");
+const auth = require("basic-auth");
 
 const router = express.Router();
 
@@ -15,6 +19,60 @@ function asyncHandler(cb) {
     }
   };
 }
+
+
+const authenticateUser = async (req, res, next) => {
+  let message = null;
+
+  // Parse the user's credentials from the Authorization header.
+  const credentials = auth(req);
+
+  // If the user's credentials are available...
+  // Attempt to retrieve the user from the data store
+  // by their username (i.e. the user's "key"
+  // from the Authorization header).
+  if (credentials) {
+    const user = await User.findOne({ emailAddress: credentials.name });
+
+    // If a user was successfully retrieved from the data store...
+    // Use the bcryptjs npm package to compare the user's password
+    // (from the Authorization header) to the user's password
+    // that was retrieved from the data store.
+    if (user) {
+      const authenticated = bcryptjs.compareSync(
+        credentials.pass,
+        user.password
+      );
+
+      // If the passwords match...
+      // Then store the retrieved user object on the request object
+      // so any middleware functions that follow this middleware function
+      // will have access to the user's information.
+      if (authenticated) {
+        console.log(`Authentication successful for username: ${user.username}`);
+        // Set found user data to variable to be used later in routes
+        req.currentUser = user;
+      } else {
+        message = `Authentication failure for username: ${user.username}`;
+      }
+    } else {
+      message = `User not found for username: ${credentials.emailAddress}`;
+    }
+  } else {
+    message = "Auth header not found";
+  }
+
+  // If user authentication failed...
+  if (message) {
+    console.log(message);
+    // Return a response with a 401 Unauthorized HTTP status code.
+    res.status(401).json({ message: "Access Denied" });
+  } else {
+    // Or if user authentication succeeded...
+    // Call the next() method.
+    next();
+  }
+};
 
 
 // GET /api/courses 200
@@ -57,28 +115,83 @@ router.get('/:id', asyncHandler( async (req, res) => {
 
 // POST /api/courses 201
 // Creates a course, sets the Location header to the URI for the course, and returns no content
+router.post('/', [
+	check('title')
+		.exists({ checkNull: true, checkFalsy: true })
+		.withMessage('Please provide a value for "title"'),
+	check('description')
+		.exists({ checkNull: true, checkFalsy: true })
+		.withMessage('Please provide a value for "description"'),
+],
+authenticateUser, async (req, res) => {
+	// Attempt to get the validation result from the Request object.
+	const errors = validationResult(req);
+
+	// If there are validation errors...
+	if (!errors.isEmpty()) {
+		// Use the Array `map()` method to get a list of error messages.
+		const errorMessages = errors.array().map(error => error.msg);
+		// Return the validation errors to the client.
+		return res.status(400).json({ errors: errorMessages });
+	} else {
+
+		// Get the user from the request body.
+		const course = req.body;
+		const userId = req.currentUser.id;
+	
+		// Create user
+		Course.create({
+			title: course.title,
+			description: course.description,
+			userId: userId
+		});
+
+		// Set the status to 201 Created and end the response.
+		res.location('/').status(201).end();
+	}
+});
+
+
+
+
+
 
 
 
 // PUT /api/courses/:id 204
 // Updates a course and returns no content
-router.post('/', asyncHandler( async (req, res) => {
+router.put('/courses/:id', asyncHandler( async (req, res) => {
 	// throw new Error('Oh noooooooo!');
-	// if(req.body.title && req.body.description) {
-	// 	const quote = await records.createQuote({
-	// 		title: req.body.title,
-	// 		description: req.body.description
-	// 	});
-	// 	res.status(201).json(quote);
+	// const quote = await records.getQuote(req.params.id);
+	// if(quote) {
+	// 	quote.quote = req.body.quote;
+	// 	quote.author = req.body.author;
+	// 	await records.updateQuote(quote);
+	// 	// We don't send anything back with PUT requests,
+	// 	// so we use Express .end() method to tell it we're done.
+	// 	res.status(204).end();
 	// } else {
-	// 	res.status(400).json({message: 'Quote and author required.'});
-	// }  
+	// 	res.status(404).json({ message: "Quote not found." });
+	// }
 }));
+
+
+
+
 
 
 // DELETE /api/courses/:id 204
 // Deletes a course and returns no content
-
+router.delete("/courses/:id", asyncHandler( async (req, res, next) => {
+	// throw new Error('Oh noooooooo!');
+	// const quote = await records.getQuote(req.params.id);
+	// if (quote) {
+	// 	await records.deleteQuote(quote);
+	// 	res.status(204).end();
+	// } else {
+	// 	res.status(404).json({ message: "Quote not found." });
+	// }
+}));
 
 
 
