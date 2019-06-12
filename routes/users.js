@@ -8,8 +8,19 @@ const auth = require('basic-auth');
 const router = express.Router();
 
 
+// Helper function so that we don't need to add try/catch to every route
+function asyncHandler(cb) {
+  return async (req, res, next) => {
+    try {
+      await cb(req, res, next);
+    } catch (err) {
+      next(err);
+    }
+  };
+}
 
-const authenticateUser = async (req, res, next) => {
+
+const authenticateUser = asyncHandler( async (req, res, next) => {
   let message = null;
 
   // Parse the user's credentials from the Authorization header.
@@ -60,7 +71,7 @@ const authenticateUser = async (req, res, next) => {
     // Call the next() method.
     next();
   }
-};
+});
 
 
 
@@ -94,7 +105,7 @@ router.post('/', [
 		.isLength({ min: 8, max: 20 })
 		.withMessage('Please provide a value for "password" that is between 8 and 20 characters in length'),
 ],
-async (req, res) => {
+asyncHandler( async (req, res) => {
 	// Attempt to get the validation result from the Request object.
 	const errors = validationResult(req);
 
@@ -134,7 +145,7 @@ async (req, res) => {
 	} else {
 		res.status(400).json({ message: "Email address already exists" });
 	}
-});
+}));
 
 
 

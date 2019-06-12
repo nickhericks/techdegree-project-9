@@ -21,7 +21,7 @@ function asyncHandler(cb) {
 }
 
 
-const authenticateUser = async (req, res, next) => {
+const authenticateUser = asyncHandler( async (req, res, next) => {
   let message = null;
 
   // Parse the user's credentials from the Authorization header.
@@ -72,7 +72,7 @@ const authenticateUser = async (req, res, next) => {
     // Call the next() method.
     next();
   }
-};
+});
 
 
 // GET /api/courses 200
@@ -123,7 +123,7 @@ router.post('/', [
 		.exists({ checkNull: true, checkFalsy: true })
 		.withMessage('Please provide a value for "description"'),
 ],
-authenticateUser, async (req, res) => {
+authenticateUser, asyncHandler( async (req, res) => {
 	// Attempt to get the validation result from the Request object.
 	const errors = validationResult(req);
 
@@ -152,7 +152,7 @@ authenticateUser, async (req, res) => {
 		// Set the status to 201 Created and end the response.
 		res.location(`/api/courses/${id}`).status(201).end();
 	}
-});
+}));
 
 
 
@@ -165,19 +165,37 @@ authenticateUser, async (req, res) => {
 // Updates a course and returns no content
 router.put('/courses/:id', asyncHandler( async (req, res) => {
 	// throw new Error('Oh noooooooo!');
-	// const quote = await records.getQuote(req.params.id);
-	// if(quote) {
-	// 	quote.quote = req.body.quote;
-	// 	quote.author = req.body.author;
-	// 	await records.updateQuote(quote);
-	// 	// We don't send anything back with PUT requests,
-	// 	// so we use Express .end() method to tell it we're done.
-	// 	res.status(204).end();
-	// } else {
-	// 	res.status(404).json({ message: "Quote not found." });
-	// }
+	const quote = await records.getQuote(req.params.id);
+	if(quote) {
+		quote.quote = req.body.quote;
+		quote.author = req.body.author;
+		await records.updateQuote(quote);
+
+		res.status(204).end();
+	} else {
+		res.status(404).json({ message: "Quote not found." });
+	}
 }));
 
+
+
+router.get('/courses/:id', authenticateUser, asyncHandler( async (req, res) => {
+	// throw new Error('Oh noooooooo!');
+	const course = await Course.findByPk(req.params.id, {
+		attributes: ["id", "title", "description", "userId"],
+		include: [
+			{
+				model: User,
+				attributes: ["id", "firstName", "lastName", "emailAddress"]
+			}
+		]
+	});
+	if (course) {
+		res.json({ course });
+	} else {
+		res.status(404).json({ message: 'Course id not found.' });
+	}
+}));
 
 
 
