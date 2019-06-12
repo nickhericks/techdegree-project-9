@@ -159,12 +159,6 @@ authenticateUser, asyncHandler( async (req, res) => {
 }));
 
 
-
-
-
-
-
-
 // PUT /api/courses/:id 204
 // Updates a course and returns no content
 router.put('/:id', [
@@ -226,25 +220,10 @@ router.put('/:id', [
 ));
 
 
-
 // DELETE /api/courses/:id 204
 // Deletes a course and returns no content
-router.delete("/courses/:id", asyncHandler( async (req, res, next) => {
-	// throw new Error('Oh noooooooo!');
-	// const quote = await records.getQuote(req.params.id);
-	// if (quote) {
-	// 	await records.deleteQuote(quote);
-	// 	res.status(204).end();
-	// } else {
-	// 	res.status(404).json({ message: "Quote not found." });
-	// }
-}));
-
-
 router.delete(
   "/:id", authenticateUser, asyncHandler(async (req, res) => {
-
-
 
       // find existing course
       const course = await Course.findByPk(req.params.id, {
@@ -281,9 +260,6 @@ router.delete(
       }
   })
 );
-
-
-
 
 
 module.exports = router;
