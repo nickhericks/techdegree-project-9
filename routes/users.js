@@ -130,7 +130,7 @@ async (req, res) => {
 		});
 
 		// Set the status to 201 Created and end the response.
-		res.status(201).end();
+		res.location('/').status(201).end();
 	} else {
 		res.status(400).json({ message: "Email address already exists" });
 	}
