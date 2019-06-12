@@ -21,7 +21,6 @@ function asyncHandler(cb) {
 }
 
 
-
 // GET /api/courses 200
 // Returns a list of courses (including the user that owns each course)
 router.get('/', asyncHandler( async (req, res) => {
@@ -50,6 +49,7 @@ router.get('/:id', asyncHandler( async (req, res) => {
 			}
 		]
 	});
+	
 	if (course) {
 		res.json({ course });
 	} else {
@@ -80,21 +80,20 @@ authenticateUser, asyncHandler( async (req, res) => {
 		return res.status(400).json({ errors: errorMessages });
 	} else {
 
-		// Get the user from the request body.
+		// get the user from the request body.
 		const course = req.body;
-		const userId = req.currentUser.id;
 
 		// Create user
 		const addedCourse = await Course.create({
-			title: course.title,
-			description: course.description,
-			userId: userId
-		});
+      title: course.title,
+      description: course.description,
+      userId: req.currentUser.id
+    });
 
-		// get new course id
+		// get new course id for Location header
 		const id = addedCourse.id;
 
-		// Set the status to 201 Created and end the response.
+		// Set the status to 201 Created, set Location header, and end the response.
 		res.location(`/api/courses/${id}`).status(201).end();
 	}
 }));
@@ -133,8 +132,11 @@ router.put('/:id', [
 				]
 			});
 
+			// if course exists
 			if (course) {
+				// if course owner matches current user
 				if (course.userId == req.currentUser.id) {
+					// update course details in Courses table
 					const updatedCourse = await Course.update({
 						title: req.body.title,
 						description: req.body.description
@@ -162,8 +164,7 @@ router.put('/:id', [
 
 // DELETE /api/courses/:id 204
 // Deletes a course and returns no content
-router.delete(
-  "/:id", authenticateUser, asyncHandler(async (req, res) => {
+router.delete('/:id', authenticateUser, asyncHandler(async (req, res) => {
 
       // find existing course
       const course = await Course.findByPk(req.params.id, {
@@ -176,8 +177,11 @@ router.delete(
         ]
       });
 
+			// if course exists
       if (course) {
+				// if course owner matches current user
 				if (course.userId == req.currentUser.id) {
+					// delete course from Courses table
 					const deletedCourse = await Course.destroy(
 						{
 							where: {
