@@ -22,21 +22,11 @@ function asyncHandler(cb) {
 router.get('/', asyncHandler( async (req, res) => {
 	// throw new Error('Oh noooooooo!');
 	const courses = await Course.findAll({
-		attributes: [
-			"id",
-			"title",
-			"description",
-			"userId"
-		],
+		attributes: ["id", "title", "description", "userId"],
 		include: [
 			{
 				model: User,
-				attributes: [
-					"id",
-					"firstName",
-					"lastName",
-					"emailAddress",
-				]
+				attributes: ["id", "firstName", "lastName", "emailAddress",]
 			}
 		]
 	});
@@ -48,11 +38,7 @@ router.get('/', asyncHandler( async (req, res) => {
 // Returns a course (including the user that owns the course) for the provided course ID
 router.get('/:id', asyncHandler( async (req, res) => {
 	// throw new Error('Oh noooooooo!');
-	const courseId = req.params.id;
-	const course = await Course.findOne({
-		where: {
-			id: courseId
-		},
+	const course = await Course.findByPk(req.params.id, {
 		attributes: ["id", "title", "description", "userId"],
 		include: [
 			{
