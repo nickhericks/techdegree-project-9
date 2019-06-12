@@ -138,16 +138,19 @@ authenticateUser, async (req, res) => {
 		// Get the user from the request body.
 		const course = req.body;
 		const userId = req.currentUser.id;
-	
+
 		// Create user
-		Course.create({
+		const addedCourse = await Course.create({
 			title: course.title,
 			description: course.description,
 			userId: userId
 		});
 
+		// get new course id
+		const id = addedCourse.id;
+
 		// Set the status to 201 Created and end the response.
-		res.location('/').status(201).end();
+		res.location(`/api/courses/${id}`).status(201).end();
 	}
 });
 
