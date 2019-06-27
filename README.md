@@ -5,8 +5,6 @@ A REST API that lets users create, list, update and delete items from a school d
 
 ---
 
-<!-- <img src="https://res.cloudinary.com/dtqevfsxh/image/upload/v1558622280/portfolio/library-book-database.png" width="899px"> -->
-
 ## View project
 1. Download this repo.
 2. Navigate to the project directory in the command line/terminal.
@@ -16,7 +14,6 @@ A REST API that lets users create, list, update and delete items from a school d
 6. Use [Postman](https://www.getpostman.com/) for thorough route testing.
 
 <!-- TODO: Set up live version using Heroku -->
-
 <!-- :mag: Live version available at [nickhericks.github.io/techdegree-project-6/](https://nickhericks.github.io/techdegree-project-6/) -->
 
 ## Project objective
